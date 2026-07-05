@@ -25,8 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ─── Install Python deps ───
+# torch installed separately (custom index for CPU/CUDA)
+RUN pip install --no-cache-dir torch==${TORCH_VERSION} --index-url ${TORCH_INDEX}
 RUN pip install --no-cache-dir \
-    torch==${TORCH_VERSION} --index-url ${TORCH_INDEX} \
     transformers>=4.46.0 \
     numpy>=1.24.0 \
     scipy>=1.10.0 \
