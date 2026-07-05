@@ -1,0 +1,50 @@
+{
+  "model": "/home/songyue/桌面",
+  "architecture": {
+    "layers": 26,
+    "activation": "gelu_pytorch_tanh",
+    "family": "GELU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.28168048374979515,
+    "gs_std": 0.0,
+    "mi": 0.09586572367069421,
+    "mi_std": 1.4130966224205545e-05,
+    "pv": 0.008684786667270869,
+    "dc": 0.08718093700342334,
+    "ph": 0.31097966599334265,
+    "ph_std": 0.0,
+    "ipr": 0.05453169003779494
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.28168048374979515,
+      "mi": 0.09586572367069421,
+      "phase": 0.31097966599334265
+    },
+    "code": {
+      "gs": 0.34705576444088115,
+      "mi": 0.09719260003394987,
+      "phase": 0.3016504937928098
+    },
+    "noise": {
+      "gs": 0.2827373874176399,
+      "mi": 0.09596759064790114,
+      "phase": 0.30307341109393227
+    }
+  },
+  "health": {
+    "status": "🔴 AT RISK",
+    "checks": {
+      "gs": "⚠️ LOW",
+      "mi": "⚠️ HIGH",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.02, 0.10]",
+    "⚠️  Phase too low for reliable checkpoint navigation",
+    "⚠️  GS below family normal — model may have degraded structure"
+  ]
+}

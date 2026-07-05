@@ -1,0 +1,50 @@
+{
+  "model": "/home/songyue/桌面/moxing/smo",
+  "architecture": {
+    "layers": 32,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "GQA"
+  },
+  "fpp_baseline": {
+    "gs": 0.8896808304462075,
+    "gs_std": 1.1102230246251565e-16,
+    "mi": 0.06937536079737117,
+    "mi_std": 1.8128062287747564e-05,
+    "pv": 0.46492204275252325,
+    "dc": 0.3955466819551522,
+    "ph": 0.31142577843558417,
+    "ph_std": 5.551115123125783e-17,
+    "ipr": 0.042593861224212826
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.8896808304462075,
+      "mi": 0.06937536079737117,
+      "phase": 0.31142577843558417
+    },
+    "code": {
+      "gs": 0.8729254615956407,
+      "mi": 0.04007630138625206,
+      "phase": 0.3337433189769049
+    },
+    "noise": {
+      "gs": 0.8769388627560769,
+      "mi": 0.060377527980262614,
+      "phase": 0.34453074404628803
+    }
+  },
+  "health": {
+    "status": "🔴 AT RISK",
+    "checks": {
+      "gs": "✅",
+      "mi": "✅",
+      "phase": "⚠️ LOW"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "⚠️  Phase too low for reliable checkpoint navigation",
+    "⚠️  High Deception Index — Pearson may be unreliable. Trust MI instead."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "model": "/home/songyue/桌面/moxing/opt",
+  "architecture": {
+    "layers": 24,
+    "activation": "relu",
+    "family": "ReLU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.5986177629938795,
+    "gs_std": 0.0,
+    "mi": 0.13799174964972555,
+    "mi_std": 3.8952831844149446e-05,
+    "pv": 0.11986956824253234,
+    "dc": 0.01812218140719319,
+    "ph": 0.2131381542893113,
+    "ph_std": 0.0,
+    "ipr": 0.061334847333723165
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.5986177629938795,
+      "mi": 0.13799174964972555,
+      "phase": 0.2131381542893113
+    },
+    "code": {
+      "gs": 0.46413958969469205,
+      "mi": 0.13870370185017764,
+      "phase": 0.23567074708917762
+    },
+    "noise": {
+      "gs": 0.4893525379674588,
+      "mi": 0.1379711895182328,
+      "phase": 0.22756560508425103
+    }
+  },
+  "health": {
+    "status": "🟢 HEALTHY",
+    "checks": {
+      "gs": "✅",
+      "mi": "✅",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "⚠️  Phase too low for reliable checkpoint navigation"
+  ]
+}

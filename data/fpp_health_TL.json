@@ -1,0 +1,50 @@
+{
+  "model": "/home/songyue/桌面/moxing/TL",
+  "architecture": {
+    "layers": 22,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.798399961872006,
+    "gs_std": 0.0,
+    "mi": 0.7711225365481564,
+    "mi_std": 2.218259159149254e-05,
+    "pv": 0.11032781489473587,
+    "dc": 0.6607947216534205,
+    "ph": 0.3888700837197838,
+    "ph_std": 0.0,
+    "ipr": 0.07363278284591276
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.798399961872006,
+      "mi": 0.7711225365481564,
+      "phase": 0.3888700837197838
+    },
+    "code": {
+      "gs": 0.7752148603969435,
+      "mi": 0.7727956762826296,
+      "phase": 0.3841150648163247
+    },
+    "noise": {
+      "gs": 0.7809788142950503,
+      "mi": 0.7781602104935612,
+      "phase": 0.3891634723280302
+    }
+  },
+  "health": {
+    "status": "🟡 NEEDS ATTENTION",
+    "checks": {
+      "gs": "✅",
+      "mi": "⚠️ HIGH",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "✅ FPP-guided fine-tuning available (Phase peak detection)",
+    "⚠️  High Deception Index — Pearson may be unreliable. Trust MI instead."
+  ]
+}

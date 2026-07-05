@@ -1,0 +1,49 @@
+{
+  "model": "/home/songyue/桌面/moxing/qwen1",
+  "architecture": {
+    "layers": 28,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.8905045897011418,
+    "gs_std": 1.1102230246251565e-16,
+    "mi": 0.10306554763731172,
+    "mi_std": 1.265792765745166e-05,
+    "pv": 0.2840579006566058,
+    "dc": 0.18099235301929403,
+    "ph": 0.3207884994139151,
+    "ph_std": 5.551115123125783e-17,
+    "ipr": 0.047588665097450814
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.8905045897011418,
+      "mi": 0.10306554763731172,
+      "phase": 0.3207884994139151
+    },
+    "code": {
+      "gs": 0.8817629928980024,
+      "mi": 0.043198850370950476,
+      "phase": 0.33736015731240215
+    },
+    "noise": {
+      "gs": 0.8780286034120464,
+      "mi": 0.07136082849416099,
+      "phase": 0.3495484545188524
+    }
+  },
+  "health": {
+    "status": "🔴 AT RISK",
+    "checks": {
+      "gs": "✅",
+      "mi": "⚠️ HIGH",
+      "phase": "⚠️ LOW"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "⚠️  Phase too low for reliable checkpoint navigation"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "model": "/home/songyue/桌面/moxing/qwen",
+  "architecture": {
+    "layers": 24,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.8128565838948246,
+    "gs_std": 0.0,
+    "mi": 0.1292759529802832,
+    "mi_std": 2.9542143103954376e-05,
+    "pv": 0.17668515048441744,
+    "dc": 0.047409197504134304,
+    "ph": 0.415514103098804,
+    "ph_std": 0.0,
+    "ipr": 0.07759694492512588
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.8128565838948246,
+      "mi": 0.1292759529802832,
+      "phase": 0.415514103098804
+    },
+    "code": {
+      "gs": 0.801869624462007,
+      "mi": 0.08340464937872374,
+      "phase": 0.42380967251887125
+    },
+    "noise": {
+      "gs": 0.7874956918623859,
+      "mi": 0.054463303399939635,
+      "phase": 0.42658811693304594
+    }
+  },
+  "health": {
+    "status": "🟡 NEEDS ATTENTION",
+    "checks": {
+      "gs": "✅",
+      "mi": "⚠️ HIGH",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "✅ FPP-guided fine-tuning available (Phase peak detection)"
+  ]
+}

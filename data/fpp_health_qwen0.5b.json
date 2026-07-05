@@ -1,0 +1,49 @@
+{
+  "model": "/home/songyue/桌面/fieldcell_test/vanchurin_synthesis/models/qwen0.5b",
+  "architecture": {
+    "layers": 24,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "MHA"
+  },
+  "fpp_baseline": {
+    "gs": 0.8117307291871227,
+    "gs_std": 1.1102230246251565e-16,
+    "mi": 0.08658841129989077,
+    "mi_std": 1.6911958682650454e-05,
+    "pv": 0.17733613073317622,
+    "dc": 0.09074771943328545,
+    "ph": 0.4100669368546444,
+    "ph_std": 0.0,
+    "ipr": 0.07701112217289456
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.8117307291871227,
+      "mi": 0.08658841129989077,
+      "phase": 0.4100669368546444
+    },
+    "code": {
+      "gs": 0.7992868180640516,
+      "mi": 0.10403739959672742,
+      "phase": 0.422393667187826
+    },
+    "noise": {
+      "gs": 0.7869019332289385,
+      "mi": 0.08213352727429542,
+      "phase": 0.4215597200736479
+    }
+  },
+  "health": {
+    "status": "🟢 HEALTHY",
+    "checks": {
+      "gs": "✅",
+      "mi": "✅",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "✅ FPP-guided fine-tuning available (Phase peak detection)"
+  ]
+}

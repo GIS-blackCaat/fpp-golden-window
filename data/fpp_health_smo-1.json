@@ -1,0 +1,50 @@
+{
+  "model": "/home/songyue/桌面/moxing/smo-1",
+  "architecture": {
+    "layers": 24,
+    "activation": "silu",
+    "family": "SwiGLU",
+    "attention": "GQA"
+  },
+  "fpp_baseline": {
+    "gs": 0.4294306277748584,
+    "gs_std": 5.551115123125783e-17,
+    "mi": 0.21637896452349864,
+    "mi_std": 8.237493907919598e-05,
+    "pv": 0.03629857436893043,
+    "dc": 0.18008039015456823,
+    "ph": 0.4692916117019671,
+    "ph_std": 1.1102230246251565e-16,
+    "ipr": 0.12030722706591364
+  },
+  "input_sensitivity": {
+    "normal_en": {
+      "gs": 0.4294306277748584,
+      "mi": 0.21637896452349864,
+      "phase": 0.4692916117019671
+    },
+    "code": {
+      "gs": 0.44940541373903536,
+      "mi": 0.1737054719611384,
+      "phase": 0.464209313047608
+    },
+    "noise": {
+      "gs": 0.4528565935428556,
+      "mi": 0.054343921904032,
+      "phase": 0.45607619912107655
+    }
+  },
+  "health": {
+    "status": "🔴 AT RISK",
+    "checks": {
+      "gs": "⚠️ LOW",
+      "mi": "⚠️ HIGH",
+      "phase": "✅"
+    }
+  },
+  "recommendations": [
+    "✅ Momentum injection SAFE: β ∈ [0.05, 0.20]",
+    "✅ FPP-guided fine-tuning available (Phase peak detection)",
+    "⚠️  GS below family normal — model may have degraded structure"
+  ]
+}
