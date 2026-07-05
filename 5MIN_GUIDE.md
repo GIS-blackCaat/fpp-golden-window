@@ -7,7 +7,7 @@
 ## 第一步：安装 & 加载（30 秒）
 
 ```bash
-pip install torch transformers numpy scipy scikit-learn
+pip install -r requirements.txt
 python fpp_health.py --model /path/to/your/model
 ```
 
