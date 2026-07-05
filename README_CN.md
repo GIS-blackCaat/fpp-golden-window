@@ -8,6 +8,16 @@
 
 ## 快速开始
 
+### Docker（一行命令，零配置）
+
+```bash
+docker run -it ghcr.io/gis-blackcaat/fpp-golden-window:latest demo
+```
+
+跑完整演示流程：健康检查 → 模型对比 → Phase 导航监控 → 基线表。无需装 Python/PyTorch/GPU。
+
+### 或者：本地 pip 安装
+
 ```bash
 git clone https://github.com/GIS-blackCaat/fpp-golden-window.git
 cd fpp-golden-window
@@ -107,6 +117,54 @@ paper.pdf                  ← 完整论文
 | ≤ 2B 参数 | 4GB 显存 GPU 或 8GB RAM CPU |
 | 7B 参数 | 16GB RAM（CPU 推理） |
 | 14B 参数 | 32GB RAM（CPU 推理） |
+
+## Docker — 一键复现论文实验
+
+镜像封装了所有能在消费级硬件上跑的实验（无需数周训练）：
+
+| 论文实验 | Docker 命令 | 复现内容 |
+|:---|:---|:---|
+| Table 2（13 模型基线） | `docker run fpp-golden-window health <MODEL>` | GS/MI/Phase/DC + 家族对照 |
+| 模型结构对比 | `docker run fpp-golden-window compare <A> <B>` | 并排结构差异分析 |
+| β 安全校准 | `docker run fpp-golden-window health <MODEL>` | 安全 β 范围（论文数据库） |
+| Phase 导航选点 | `docker run fpp-golden-window monitor` | EXP-23 轨迹 + 三种策略对比 |
+| 完整演示 | `docker run fpp-golden-window demo` | 上述全部一键完成 |
+
+**Docker 无法复现的**（需要实际训练）：
+- Pythia 从头训练 143K 步轨迹（消费级硬件需数周）
+- 动量注入 β 扫描训练（使用论文预计算校准值）
+
+### Docker 常用命令
+
+```bash
+# 完整演示
+docker run -it fpp-golden-window demo
+
+# 测任意 HuggingFace 模型
+docker run -it fpp-golden-window health Qwen/Qwen2.5-0.5B-Instruct
+
+# 对比两个模型
+docker run -it fpp-golden-window compare Qwen/Qwen2.5-0.5B TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
+# 打印 13 模型基线表
+docker run -it fpp-golden-window table
+
+# GPU 加速
+docker run -it --gpus all fpp-golden-window demo
+
+# 进入交互式 shell
+docker run -it fpp-golden-window shell
+```
+
+### 从源码构建
+
+```bash
+docker build -t fpp-golden-window .
+docker run -it fpp-golden-window demo
+
+# GPU 版本（CUDA 11.8）
+docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu .
+```
 
 ---
 

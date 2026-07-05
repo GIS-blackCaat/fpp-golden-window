@@ -1,0 +1,10 @@
+# Docker build context — exclude everything not needed in the image
+.git
+.gitignore
+.cache
+*.pyc
+__pycache__
+*.egg-info
+docker-compose.yml
+Dockerfile
+.dockerignore

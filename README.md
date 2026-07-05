@@ -8,6 +8,16 @@
 
 ## Quick Start
 
+### Docker (one command, zero setup)
+
+```bash
+docker run -it ghcr.io/gis-blackcaat/fpp-golden-window:latest demo
+```
+
+Runs the full paper demo: health check → model comparison → Phase-guided checkpoint monitor → baseline table. No Python, no PyTorch, no GPU required.
+
+### Or: pip install locally
+
 ```bash
 git clone https://github.com/GIS-blackCaat/fpp-golden-window.git
 cd fpp-golden-window
@@ -107,6 +117,54 @@ paper.pdf                  ← Full paper
 | ≤ 2B params | 4GB VRAM GPU or 8GB RAM CPU |
 | 7B params | 16GB RAM (CPU inference) |
 | 14B params | 32GB RAM (CPU inference) |
+
+## Docker — Reproduce Paper Experiments
+
+The Docker image reproduces everything that can be run on consumer hardware without weeks of training:
+
+| Paper Experiment | Docker Command | What It Shows |
+|:---|:---|:---|
+| Table 2 (13-model baseline) | `docker run fpp-golden-window health <MODEL>` | GS/MI/Phase/DC + family norms |
+| Model comparison | `docker run fpp-golden-window compare <A> <B>` | Side-by-side structural diff |
+| β safety calibration | `docker run fpp-golden-window health <MODEL>` | Safe β range (from paper DB) |
+| Phase-guided checkpointing | `docker run fpp-golden-window monitor` | EXP-23 trajectory + 3-strategy comparison |
+| Full demo | `docker run fpp-golden-window demo` | All of the above in one run |
+
+**What the Docker image CANNOT reproduce** (requires actual training):
+- Full 143K-step Pythia training trajectory (takes weeks on consumer hardware)
+- Momentum injection β sweep training (uses paper's pre-computed calibration)
+
+### Docker commands
+
+```bash
+# Full demo (baseline + comparison + monitor + table)
+docker run -it fpp-golden-window demo
+
+# Check any HuggingFace model
+docker run -it fpp-golden-window health Qwen/Qwen2.5-0.5B-Instruct
+
+# Compare two models
+docker run -it fpp-golden-window compare Qwen/Qwen2.5-0.5B TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
+# Show 13-model baseline table
+docker run -it fpp-golden-window table
+
+# GPU acceleration
+docker run -it --gpus all fpp-golden-window demo
+
+# Interactive shell
+docker run -it fpp-golden-window shell
+```
+
+### Build from source
+
+```bash
+docker build -t fpp-golden-window .
+docker run -it fpp-golden-window demo
+
+# GPU version (CUDA 11.8)
+docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu .
+```
 
 ---
 
