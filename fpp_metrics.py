@@ -1,5 +1,6 @@
 """FPP V4 Core Metrics — self-contained, zero external FPP dependencies."""
 import numpy as np
+import torch
 from scipy import stats
 from sklearn.feature_selection import mutual_info_regression
 
@@ -45,7 +46,6 @@ def run_fpp(model, tokenizer, layers, text, n=10):
             return h
         for i, _ in enumerate(layers): hooks.append(layers[i].register_forward_hook(hk(i)))
         with torch.no_grad():
-            import torch
             _ = model(ids); fwd = dict(outs)
             _ = model(torch.flip(ids, [1])); rev = dict(outs)
         for h in hooks: h.remove()

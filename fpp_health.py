@@ -3,28 +3,31 @@
 FPP V4 Health Check — 任何开源/自有模型一键体检
 
 用法:
-    python fpp_health_check.py --model /path/to/model
-    python fpp_health_check.py --model Qwen/Qwen2.5-0.5B-Instruct
-    python fpp_health_check.py --model /home/songyue/桌面/moxing/TL
+    python fpp_health.py --model /path/to/model
+    python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
+    python fpp_health.py --model ./my-finetuned-model
 
-输出: 架构指纹 + FPP 6维基线 + 健康评估 + 安全优化建议
+输出: 架构指纹 + FPP 4维基线 + 健康评估 + 安全优化建议
 """
 import os, sys, time, json, argparse
 import numpy as np
 import torch
 
-# Use local fpp_metrics.py if available, otherwise try experiments_论文_v4
+# Use local fpp_metrics.py if available
 try:
-    from fpp_metrics import pearson_r, mutual_info, deception_index, run_fpp
+    from fpp_metrics import pearson_r, mutual_info, deception_index
 except ImportError:
-    import os as _os; _fpp_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '.')
+    import os as _os
+    _fpp_dir = _os.path.dirname(_os.path.abspath(__file__))
     if _os.path.exists(_os.path.join(_fpp_dir, 'fpp_metrics.py')):
         _os.sys.path.insert(0, _fpp_dir)
-        from fpp_metrics import pearson_r, mutual_info, deception_index, run_fpp
+        from fpp_metrics import pearson_r, mutual_info, deception_index
     else:
-        _os.sys.path.insert(0, '/home/songyue/桌面/fieldcell_test/vanchurin_synthesis/experiments_论文_v4')
-        from fpp_v3.metrics import pearson_r, mutual_info, deception_index
-        run_fpp = None
+        raise ImportError(
+            "fpp_metrics.py not found. Please download it from:\n"
+            "  https://github.com/GIS-blackCaat/fpp-golden-window\n"
+            "and place it in the same directory as fpp_health.py."
+        )
 
 # ═══════════════════════════════════════════════════════════════
 # Architecture Family Database (from 12-architecture study)
