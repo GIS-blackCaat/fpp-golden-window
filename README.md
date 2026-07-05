@@ -9,6 +9,10 @@ pip install -r requirements.txt
 python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 ```
 
+## ⏱️ 5-Minute Diagnostic Guide
+
+New to FPP? Start here: **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load model → run FPP → read 4 indicators → decide what to do next. With decision tree and β safety quick-reference table.
+
 ## What You Get
 
 - Architecture fingerprint (activation, attention, layers)
