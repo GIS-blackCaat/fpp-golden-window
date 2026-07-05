@@ -30,6 +30,10 @@ New to FPP? Start here: **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load model → ru
 
 10 pre-computed health reports + 7B validation data + calibration database.
 
+## Language
+
+[中文版 (Chinese)](README_CN.md)
+
 ## License
 
 MIT
