@@ -33,6 +33,14 @@ python tools/fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 
 第一次用？→ **[docs/5MIN_GUIDE.md](docs/5MIN_GUIDE.md)** —— 加载模型 → 跑 FPP → 看四个指标 → 决定下一步怎么调。含决策树和 β 安全速查表。
 
+## 🤖 Claude Code Skill
+
+仓库自带 Claude Code skill（`.claude/skills/fpp-expert.md`）。clone 后 Claude Code 自动发现，直接问：
+
+> "这个模型健康吗？" / "微调什么时候该停？" / "能加动量吗？"
+
+Skill 即时提供：指标解读、家族健康范围、β 安全表、决策树、4 个常用 workflow。
+
 ---
 
 ## 仓库结构

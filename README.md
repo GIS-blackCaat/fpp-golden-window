@@ -33,6 +33,14 @@ Works with any HuggingFace Transformers model. Diagnosis completes in ~5 seconds
 
 New to FPP? → **[docs/5MIN_GUIDE.md](docs/5MIN_GUIDE.md)** — load → run → read 4 indicators → decide what to do next. Decision tree + β safety table.
 
+## 🤖 Claude Code Skill
+
+This repo includes a Claude Code skill (`.claude/skills/fpp-expert.md`). After cloning, Claude Code auto-discovers it — just ask:
+
+> "Is this model healthy?" / "When should I stop fine-tuning?" / "Can I add momentum?"
+
+The skill provides instant access to: metric interpretation, family healthy ranges, β safety table, decision tree, and all 4 workflows.
+
 ---
 
 ## Repo Structure
