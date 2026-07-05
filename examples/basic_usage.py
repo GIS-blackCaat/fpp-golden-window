@@ -15,9 +15,11 @@ FPP Programmatic Usage Example
 
 import torch
 import numpy as np
+import os, sys
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # ─── 导入 FPP 核心函数 ───
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'tools'))
 from fpp_metrics import pearson_r, mutual_info, deception_index
 
 # ============================================================

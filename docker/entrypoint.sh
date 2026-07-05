@@ -35,7 +35,7 @@ case "${1:-demo}" in
         echo ">>> Step 1/4: FPP Health Check (Qwen 0.5B Instruct)"
         echo "    (first run will download ~1GB model — cached thereafter)"
         echo ""
-        python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct --n-runs 5
+        python tools/fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct --n-runs 5
         echo ""
         echo ">>> Step 2/4: Baseline Comparison (TinyLlama vs Qwen 0.5B)"
         echo ""
@@ -98,7 +98,7 @@ compare_models(r1, r2, 'Qwen 0.5B', 'TinyLlama 1.1B')
         MODEL="${1:-Qwen/Qwen2.5-0.5B-Instruct}"
         banner
         echo "Running FPP Health Check on: $MODEL"
-        python fpp_health.py --model "$MODEL"
+        python tools/fpp_health.py --model "$MODEL"
         ;;
 
     compare)
@@ -155,7 +155,7 @@ compare_models(ra, rb, '$MODEL_A', '$MODEL_B')
         echo "Note: β scanning requires actual fine-tuning — this shows the"
         echo "paper's pre-computed safe ranges for your model's architecture family."
         echo ""
-        python fpp_health.py --model "$MODEL" --verbose
+        python tools/fpp_health.py --model "$MODEL" --verbose
         ;;
 
     monitor)
@@ -173,8 +173,9 @@ compare_models(ra, rb, '$MODEL_A', '$MODEL_B')
 
     shell)
         banner
-        echo "Tools:  fpp_health.py  fpp_metrics.py"
+        echo "Tools:  tools/fpp_health.py  tools/fpp_metrics.py"
         echo "Demos:  examples/basic_usage.py  examples/finetune_monitor.py"
+        echo "Docs:   docs/5MIN_GUIDE.md  docs/paper.pdf"
         echo "Data:   data/health_reports/  data/experiments/"
         echo ""
         exec bash

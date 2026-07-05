@@ -22,7 +22,7 @@ Runs the full paper demo: health check → model comparison → Phase-guided che
 git clone https://github.com/GIS-blackCaat/fpp-golden-window.git
 cd fpp-golden-window
 pip install -r requirements.txt
-python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
+python tools/fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 ```
 
 Works with any HuggingFace Transformers model. Diagnosis completes in ~5 seconds.
@@ -31,28 +31,20 @@ Works with any HuggingFace Transformers model. Diagnosis completes in ~5 seconds
 
 ## ⏱️ 5-Minute Diagnostic Guide
 
-New to FPP? → **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load → run → read 4 indicators → decide what to do next. Decision tree + β safety table.
+New to FPP? → **[docs/5MIN_GUIDE.md](docs/5MIN_GUIDE.md)** — load → run → read 4 indicators → decide what to do next. Decision tree + β safety table.
 
 ---
 
 ## Repo Structure
 
 ```
-fpp_health.py              ← One-click health check (main entry point)
-fpp_metrics.py             ← Core GS/MI/Phase/DC implementation
-tools/                     ← Auxiliary visualization tools
-  dashboard.py             ← Radar chart + bar chart for health viz
-  advantage_viz.py         ← FPP vs Loss advantage comparison
+tools/                     ← Main tools: health check, metrics, visualization
 examples/                  ← Runnable example scripts
-  basic_usage.py           ← Programmatic FPP usage demo
-  finetune_monitor.py      ← Phase-guided checkpoint selection (real EXP-23 data)
-data/
-  health_reports/          ← 12 model health reports (JSON)
-  experiments/             ← Experiment trajectories + comparison data
-  DATABASE.md              ← 13-model evaluation database
+data/                      ← Health reports + experiments + database
+docker/                    ← Dockerfile + compose + entrypoint
+docs/                      ← Guide, install, paper
 figures/                   ← 4 paper figures (PDF)
 tables/                    ← 2 LaTeX tables
-docker/                    ← Dockerfile + compose + entrypoint
 ```
 
 ---

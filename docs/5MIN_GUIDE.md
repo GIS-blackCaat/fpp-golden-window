@@ -8,7 +8,7 @@
 
 ```bash
 pip install -r requirements.txt
-python fpp_health.py --model /path/to/your/model
+python tools/fpp_health.py --model /path/to/your/model
 ```
 
 支持本地路径和 HuggingFace 模型名。模型加载耗时取决于模型大小，FPP 测量本身只需 ~5 秒。
@@ -111,7 +111,7 @@ python fpp_health.py --model /path/to/your/model
 ### 微调中 Phase 监控策略
 
 ```
-每 50 步跑: python fpp_health.py --model ./checkpoint-XXX
+每 50 步跑: python tools/fpp_health.py --model ./checkpoint-XXX
 
 Phase ↗ 上升  → ✅ 继续，结构在变好
 Phase → 平稳  → ⚠️ 接近峰值，准备评估下游任务
@@ -139,16 +139,16 @@ Phase ↘ 下降  → 🔴 停止！回退到上一个 Phase 峰值 checkpoint
 
 ```bash
 # 基础诊断
-python fpp_health.py --model ~/models/my-model
+python tools/fpp_health.py --model ~/models/my-model
 
 # 高精度模式（20 次重复测量，DC>0.3 时推荐）
-python fpp_health.py --model ~/models/my-model --n-runs 20
+python tools/fpp_health.py --model ~/models/my-model --n-runs 20
 
 # 详细输出（看每个输入类型的 GS/MI/Phase）
-python fpp_health.py --model ~/models/my-model --verbose
+python tools/fpp_health.py --model ~/models/my-model --verbose
 
 # 微调中监控 checkpoint
-python fpp_health.py --model ./checkpoint-250
+python tools/fpp_health.py --model ./checkpoint-250
 ```
 
 ---

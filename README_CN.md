@@ -22,7 +22,7 @@ docker run -it ghcr.io/gis-blackcaat/fpp-golden-window:latest demo
 git clone https://github.com/GIS-blackCaat/fpp-golden-window.git
 cd fpp-golden-window
 pip install -r requirements.txt
-python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
+python tools/fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 ```
 
 支持任何 HuggingFace Transformers 模型。5 秒完成体检。
@@ -31,28 +31,20 @@ python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 
 ## ⏱️ 五分钟诊断指南
 
-第一次用？→ **[5MIN_GUIDE.md](5MIN_GUIDE.md)** —— 加载模型 → 跑 FPP → 看四个指标 → 决定下一步怎么调。含决策树和 β 安全速查表。
+第一次用？→ **[docs/5MIN_GUIDE.md](docs/5MIN_GUIDE.md)** —— 加载模型 → 跑 FPP → 看四个指标 → 决定下一步怎么调。含决策树和 β 安全速查表。
 
 ---
 
 ## 仓库结构
 
 ```
-fpp_health.py              ← 一键体检（主入口）
-fpp_metrics.py             ← 核心 GS/MI/Phase/DC 实现
-tools/                     ← 辅助可视化工具
-  dashboard.py             ← 雷达图 + 柱状图
-  advantage_viz.py         ← FPP vs Loss 优势对比
+tools/                     ← 主工具：健康检查、核心指标、可视化
 examples/                  ← 可运行的示例脚本
-  basic_usage.py           ← 程序化调用 FPP 示例
-  finetune_monitor.py      ← Phase 导航最优 checkpoint（基于 EXP-23 真实数据）
-data/
-  health_reports/          ← 12 个模型健康报告（JSON）
-  experiments/             ← 实验轨迹 + 对比数据
-  DATABASE.md              ← 13 模型评价数据库
+data/                      ← 健康报告 + 实验数据 + 评价数据库
+docker/                    ← Dockerfile + compose + entrypoint
+docs/                      ← 五分钟指南 + 安装说明 + 论文 PDF
 figures/                   ← 4 张论文主图（PDF）
 tables/                    ← 2 个 LaTeX 表格
-docker/                    ← Dockerfile + compose + entrypoint
 ```
 
 ---

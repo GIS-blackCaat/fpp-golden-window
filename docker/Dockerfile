@@ -38,8 +38,7 @@ RUN pip install --no-cache-dir \
 # ─── Copy FPP files ───
 WORKDIR /app
 
-# Core tools (at root — users run `python fpp_health.py`)
-COPY fpp_health.py fpp_metrics.py ./
+# Tools
 COPY tools/ ./tools/
 COPY examples/ ./examples/
 
@@ -49,14 +48,15 @@ COPY figures/ ./figures/
 COPY tables/ ./tables/
 
 # Docs
-COPY 5MIN_GUIDE.md paper.pdf README.md README_CN.md ./
+COPY docs/ ./docs/
+COPY README.md README_CN.md LICENSE requirements.txt ./
 
 # Entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Make examples importable
-ENV PYTHONPATH=/app:/app/examples:/app/tools
+# Make tools/examples importable
+ENV PYTHONPATH=/app:/app/tools:/app/examples
 
 # ─── HF cache as volume (models persist across runs) ───
 ENV HF_HOME=/app/.cache/huggingface
