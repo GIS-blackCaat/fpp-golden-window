@@ -1,16 +1,18 @@
 # ─── FPP Golden Window — docker-compose.yml ───
-# 一键启动: docker compose up
+# 一键启动: cd docker && docker compose up
 #
-# 首次运行会下载模型(~1GB)，后续使用缓存。
+# 首次运行会下载模型(~1GB)，后续使用 Docker volume 缓存。
 
 version: "3.8"
 
 services:
   fpp:
-    build: .
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     image: fpp-golden-window:latest
     container_name: fpp-golden-window
-    # GPU 用户取消下面两行注释:
+    # GPU 用户取消下面注释:
     # deploy:
     #   resources:
     #     reservations:

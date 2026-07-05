@@ -1,12 +1,12 @@
 # ─── FPP Golden Window — Dockerfile ───
 # 一键复现论文核心实验（消费级硬件，无需 GPU）
 #
-# 用法:
-#   docker build -t fpp-golden-window .
-#   docker run -it fpp-golden-window
+# 用法（在仓库根目录）:
+#   docker build -t fpp-golden-window -f docker/Dockerfile .
+#   或: cd docker && docker compose up
 #
 # GPU 版本:
-#   docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu .
+#   docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu -f docker/Dockerfile .
 
 FROM python:3.10-slim
 
@@ -35,16 +35,28 @@ RUN pip install --no-cache-dir \
     accelerate>=0.20.0 \
     huggingface_hub
 
-# ─── Copy FPP tools ───
+# ─── Copy FPP files ───
 WORKDIR /app
-COPY fpp_health.py fpp_metrics.py fpp_health_dashboard.py fpp_advantage_viz.py ./
-COPY example.py demo_finetune_monitor.py ./
+
+# Core tools (at root — users run `python fpp_health.py`)
+COPY fpp_health.py fpp_metrics.py ./
+COPY tools/ ./tools/
+COPY examples/ ./examples/
+
+# Data, figures, tables
 COPY data/ ./data/
 COPY figures/ ./figures/
 COPY tables/ ./tables/
-COPY 5MIN_GUIDE.md paper.pdf ./
+
+# Docs
+COPY 5MIN_GUIDE.md paper.pdf README.md README_CN.md ./
+
+# Entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Make examples importable
+ENV PYTHONPATH=/app:/app/examples:/app/tools
 
 # ─── HF cache as volume (models persist across runs) ───
 ENV HF_HOME=/app/.cache/huggingface

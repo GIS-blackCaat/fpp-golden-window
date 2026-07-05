@@ -20,15 +20,13 @@ usage() {
     echo "                   e.g.: health Qwen/Qwen2.5-0.5B-Instruct"
     echo "  compare A B      Compare two models side by side"
     echo "                   e.g.: compare Qwen/Qwen2.5-0.5B Qwen/Qwen2.5-1.5B"
-    echo "  scan MODEL       Scan β safety range (0.01-0.50) on a model"
-    echo "                   e.g.: scan Qwen/Qwen2.5-0.5B-Instruct"
+    echo "  scan MODEL       Show β safety range for a model"
     echo "  monitor          Demo Phase-guided fine-tuning checkpoint selection"
     echo "  table            Print the 13-model baseline table from the paper"
     echo "  shell            Drop into bash shell"
     echo "  help             Show this message"
     echo ""
     echo "GPU users: add '--gpus all' to docker run for CUDA acceleration."
-    echo "           Model cache is persisted via Docker volume."
 }
 
 case "${1:-demo}" in
@@ -42,8 +40,9 @@ case "${1:-demo}" in
         echo ">>> Step 2/4: Baseline Comparison (TinyLlama vs Qwen 0.5B)"
         echo ""
         python -c "
-from example import run_fpp_single, quick_health_check, compare_models
-import torch, numpy as np
+import sys; sys.path.insert(0, '/app/examples')
+from basic_usage import run_fpp_single, compare_models
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -60,7 +59,6 @@ def get_layers(model):
 
 text = 'The transformer architecture has become the foundation of modern AI systems.'
 
-# Model 1: Qwen 0.5B
 print('Loading Qwen 0.5B...')
 m1 = AutoModelForCausalLM.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct', torch_dtype=dtype, trust_remote_code=True).to(device)
 t1 = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct', trust_remote_code=True)
@@ -68,7 +66,6 @@ l1 = get_layers(m1)
 r1 = run_fpp_single(m1, t1, l1, text, n=5)
 del m1; torch.cuda.empty_cache() if device == 'cuda' else None
 
-# Model 2: TinyLlama
 print('Loading TinyLlama...')
 m2 = AutoModelForCausalLM.from_pretrained('TinyLlama/TinyLlama-1.1B-Chat-v1.0', torch_dtype=dtype, trust_remote_code=True).to(device)
 t2 = AutoTokenizer.from_pretrained('TinyLlama/TinyLlama-1.1B-Chat-v1.0', trust_remote_code=True)
@@ -81,17 +78,11 @@ compare_models(r1, r2, 'Qwen 0.5B', 'TinyLlama 1.1B')
         echo ""
         echo ">>> Step 3/4: Phase-Guided Fine-Tuning Monitor"
         echo ""
-        python demo_finetune_monitor.py
+        python examples/finetune_monitor.py
         echo ""
         echo ">>> Step 4/4: 13-Model Baseline Table"
         echo ""
-        python -c "
-import json
-with open('data/FPP_EVALUATION_DATABASE.md') as f:
-    for line in f:
-        if '|' in line and not line.startswith('##'):
-            print(line.rstrip())
-"
+        cat data/DATABASE.md
         echo ""
         banner
         echo "✅ Full demo complete!"
@@ -123,7 +114,8 @@ with open('data/FPP_EVALUATION_DATABASE.md') as f:
         echo "Comparing: $MODEL_A  vs  $MODEL_B"
         echo ""
         python -c "
-from example import run_fpp_single, compare_models
+import sys; sys.path.insert(0, '/app/examples')
+from basic_usage import run_fpp_single, compare_models
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -159,7 +151,6 @@ compare_models(ra, rb, '$MODEL_A', '$MODEL_B')
         MODEL="${1:-Qwen/Qwen2.5-0.5B-Instruct}"
         banner
         echo "β Safety Scan on: $MODEL"
-        echo "(tests β ∈ [0.01, 0.02, 0.05, 0.10, 0.20, 0.50])"
         echo ""
         echo "Note: β scanning requires actual fine-tuning — this shows the"
         echo "paper's pre-computed safe ranges for your model's architecture family."
@@ -169,7 +160,7 @@ compare_models(ra, rb, '$MODEL_A', '$MODEL_B')
 
     monitor)
         banner
-        python demo_finetune_monitor.py
+        python examples/finetune_monitor.py
         ;;
 
     table)
@@ -177,13 +168,14 @@ compare_models(ra, rb, '$MODEL_A', '$MODEL_B')
         echo "13-Model Baseline Table (from paper Table 2)"
         echo "============================================="
         echo ""
-        cat data/FPP_EVALUATION_DATABASE.md
+        cat data/DATABASE.md
         ;;
 
     shell)
         banner
-        echo "FPP tools available: fpp_health.py, fpp_metrics.py, example.py"
-        echo "Data: data/*.json"
+        echo "Tools:  fpp_health.py  fpp_metrics.py"
+        echo "Demos:  examples/basic_usage.py  examples/finetune_monitor.py"
+        echo "Data:   data/health_reports/  data/experiments/"
         echo ""
         exec bash
         ;;

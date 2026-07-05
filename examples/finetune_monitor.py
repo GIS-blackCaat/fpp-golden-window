@@ -11,7 +11,7 @@ Demo: FPP-Guided Fine-Tuning Monitor
   - Phase 峰值 → 最优 checkpoint（比 Loss 最优点多保 30-40% 推理能力）
 
 本 demo 使用 EXP-23 的真实实验数据演示这个流程。
-数据来源: data/baseline_comparison.json (Qwen 0.5B LoRA, WikiText-2, 500 steps)
+数据来源: data/experiments/baseline_comparison.json (Qwen 0.5B LoRA, WikiText-2, 500 steps)
 
 要求: pip install -r requirements.txt
 """
@@ -22,7 +22,8 @@ import sys
 import numpy as np
 
 # ─── 加载真实实验数据 ───
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(REPO_ROOT, 'data', 'experiments')
 data_path = os.path.join(DATA_DIR, 'baseline_comparison.json')
 
 if not os.path.exists(data_path):

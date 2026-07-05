@@ -14,7 +14,7 @@
 docker run -it ghcr.io/gis-blackcaat/fpp-golden-window:latest demo
 ```
 
-Runs the full paper demo: health check → model comparison → Phase-guided checkpoint monitor → baseline table. No Python, no PyTorch, no GPU required.
+Runs the full paper demo: health check → model comparison → Phase-guided checkpoint monitor → baseline table.
 
 ### Or: pip install locally
 
@@ -25,32 +25,34 @@ pip install -r requirements.txt
 python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 ```
 
-Works with any HuggingFace Transformers model (local path or model name). Diagnosis completes in ~5 seconds.
+Works with any HuggingFace Transformers model. Diagnosis completes in ~5 seconds.
 
 ---
 
 ## ⏱️ 5-Minute Diagnostic Guide
 
-New to FPP? Start here: **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load → run FPP → read 4 indicators → decide what to do next. Includes decision tree and β safety quick-reference table.
+New to FPP? → **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load → run → read 4 indicators → decide what to do next. Decision tree + β safety table.
 
 ---
 
-## What You Get
+## Repo Structure
 
-- **Architecture fingerprint** (activation, attention, layers)
-- **FPP 4D baseline** (GS, MI, Phase, DC)
-- **Health assessment** (vs family-specific norms)
-- **Safe β range** (momentum injection safety)
-- **Optimization recommendations** (whether/how to fine-tune, Phase-guided checkpointing)
-
-## Examples
-
-```bash
-# Programmatic usage — call FPP from your own Python code
-python example.py --model Qwen/Qwen2.5-0.5B-Instruct
-
-# Fine-tuning monitor — Phase-guided checkpoint selection (with real EXP-23 data)
-python demo_finetune_monitor.py
+```
+fpp_health.py              ← One-click health check (main entry point)
+fpp_metrics.py             ← Core GS/MI/Phase/DC implementation
+tools/                     ← Auxiliary visualization tools
+  dashboard.py             ← Radar chart + bar chart for health viz
+  advantage_viz.py         ← FPP vs Loss advantage comparison
+examples/                  ← Runnable example scripts
+  basic_usage.py           ← Programmatic FPP usage demo
+  finetune_monitor.py      ← Phase-guided checkpoint selection (real EXP-23 data)
+data/
+  health_reports/          ← 12 model health reports (JSON)
+  experiments/             ← Experiment trajectories + comparison data
+  DATABASE.md              ← 13-model evaluation database
+figures/                   ← 4 paper figures (PDF)
+tables/                    ← 2 LaTeX tables
+docker/                    ← Dockerfile + compose + entrypoint
 ```
 
 ---
@@ -59,16 +61,16 @@ python demo_finetune_monitor.py
 
 | Metric | Name | What It Measures | TL;DR |
 |:---|:---|:---|:---|
-| **GS** | Green Symmetry | Time-reversal structural order (forward vs reverse pass) | Higher → healthier structure |
-| **MI** | Mutual Information Retention | How much information survives from input to output | Architecture-determined; fine-tuning can't raise the ceiling |
-| **Phase** | Phase Structure | Whether layers do different things (layer differentiation) | Peak = optimal checkpoint; dropping = stop training |
-| **DC** | Deception Index | Whether Pearson correlation is lying about structural health | >0.3 → trust MI, not GS |
+| **GS** | Green Symmetry | Time-reversal structural order | Higher → healthier structure |
+| **MI** | Mutual Information Retention | Information survival from input to output | Architecture-determined ceiling |
+| **Phase** | Phase Structure | Whether layers do different things | Peak = optimal checkpoint |
+| **DC** | Deception Index | Whether Pearson is lying | >0.3 → trust MI, not GS |
 
 ---
 
 ## β Safety Quick Reference
 
-Before adding momentum to your optimizer, check this table. Same β=0.2: Qwen gains +19% GS, Gemma collapses.
+Before adding momentum to your optimizer:
 
 | Your Model Family | Safe β Range | Expected Effect |
 |:---|:---|:---|
@@ -81,60 +83,19 @@ Before adding momentum to your optimizer, check this table. Same β=0.2: Qwen ga
 
 ---
 
-## Repo Contents
+## Examples
 
-```
-fpp_health.py              ← One-click health check (CLI)
-fpp_metrics.py             ← Core GS/MI/Phase/DC implementation
-fpp_health_dashboard.py    ← Health dashboard visualization
-fpp_advantage_viz.py       ← FPP advantage comparison plots
-example.py                 ← Programmatic usage demo
-demo_finetune_monitor.py   ← Phase-guided checkpoint selection demo
-data/                      ← 14 health reports + calibration DB + trajectories
-figures/                   ← 4 paper figures (PDF vector)
-tables/                    ← 2 LaTeX tables (10-model, method comparison)
-5MIN_GUIDE.md              ← 5-minute diagnostic walkthrough
-paper.pdf                  ← Full paper
+```bash
+# Programmatic usage — call FPP from your own Python code
+python examples/basic_usage.py --model Qwen/Qwen2.5-0.5B-Instruct
+
+# Fine-tuning monitor — Phase-guided checkpoint selection (real EXP-23 data)
+python examples/finetune_monitor.py
 ```
 
 ---
-
-## Paper
-
-**"Loss Is Not Enough: The Golden Window in Neural Network Training"**
-
-- 📄 **PDF**: [HuggingFace](https://huggingface.co/youyouYUE/golden-window)
-- 🔬 **Key finding**: Training is not monotonic — neural networks go through Build → Collapse → Rebuild. Loss is blind to the collapse.
-- 🪟 **Golden Window**: Structure peaks at ~step 1,000, then is sacrificed for marginal loss gains.
-- 💻 **Hardware**: All experiments on consumer hardware. Large-model research isn't exclusive to large companies.
-
----
-
-## Hardware Requirements
-
-| Model Size | Minimum |
-|:---|:---|
-| ≤ 2B params | 4GB VRAM GPU or 8GB RAM CPU |
-| 7B params | 16GB RAM (CPU inference) |
-| 14B params | 32GB RAM (CPU inference) |
 
 ## Docker — Reproduce Paper Experiments
-
-The Docker image reproduces everything that can be run on consumer hardware without weeks of training:
-
-| Paper Experiment | Docker Command | What It Shows |
-|:---|:---|:---|
-| Table 2 (13-model baseline) | `docker run fpp-golden-window health <MODEL>` | GS/MI/Phase/DC + family norms |
-| Model comparison | `docker run fpp-golden-window compare <A> <B>` | Side-by-side structural diff |
-| β safety calibration | `docker run fpp-golden-window health <MODEL>` | Safe β range (from paper DB) |
-| Phase-guided checkpointing | `docker run fpp-golden-window monitor` | EXP-23 trajectory + 3-strategy comparison |
-| Full demo | `docker run fpp-golden-window demo` | All of the above in one run |
-
-**What the Docker image CANNOT reproduce** (requires actual training):
-- Full 143K-step Pythia training trajectory (takes weeks on consumer hardware)
-- Momentum injection β sweep training (uses paper's pre-computed calibration)
-
-### Docker commands
 
 ```bash
 # Full demo (baseline + comparison + monitor + table)
@@ -156,15 +117,32 @@ docker run -it --gpus all fpp-golden-window demo
 docker run -it fpp-golden-window shell
 ```
 
-### Build from source
+Build from source:
 
 ```bash
-docker build -t fpp-golden-window .
-docker run -it fpp-golden-window demo
-
-# GPU version (CUDA 11.8)
-docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu .
+docker build -t fpp-golden-window -f docker/Dockerfile .
+# or: cd docker && docker compose up
 ```
+
+---
+
+## Paper
+
+**"Loss Is Not Enough: The Golden Window in Neural Network Training"**
+
+- 📄 **PDF**: [HuggingFace](https://huggingface.co/youyouYUE/golden-window)
+- 🔬 Training is not monotonic — Build → Collapse → Rebuild. Loss is blind to the collapse.
+- 🪟 Structure peaks at ~step 1,000 (golden window), then sacrificed for marginal loss gains.
+
+---
+
+## Hardware Requirements
+
+| Model Size | Minimum |
+|:---|:---|
+| ≤ 2B params | 4GB VRAM GPU or 8GB RAM CPU |
+| 7B params | 16GB RAM (CPU inference) |
+| 14B params | 32GB RAM (CPU inference) |
 
 ---
 
@@ -174,7 +152,7 @@ docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t f
 
 ## License
 
-MIT — do whatever you want, commercial-friendly.
+MIT
 
 ## Citation
 

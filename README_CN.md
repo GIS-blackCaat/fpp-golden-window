@@ -14,7 +14,7 @@
 docker run -it ghcr.io/gis-blackcaat/fpp-golden-window:latest demo
 ```
 
-跑完整演示流程：健康检查 → 模型对比 → Phase 导航监控 → 基线表。无需装 Python/PyTorch/GPU。
+跑完整演示流程：健康检查 → 模型对比 → Phase 导航监控 → 基线表。
 
 ### 或者：本地 pip 安装
 
@@ -25,32 +25,34 @@ pip install -r requirements.txt
 python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 ```
 
-支持任何 HuggingFace Transformers 模型（本地路径或模型名）。5 秒完成体检。
+支持任何 HuggingFace Transformers 模型。5 秒完成体检。
 
 ---
 
 ## ⏱️ 五分钟诊断指南
 
-第一次用？从这里开始：**[5MIN_GUIDE.md](5MIN_GUIDE.md)** —— 加载模型 → 跑 FPP → 看四个指标 → 决定下一步怎么调。含决策树和 β 安全速查表。
+第一次用？→ **[5MIN_GUIDE.md](5MIN_GUIDE.md)** —— 加载模型 → 跑 FPP → 看四个指标 → 决定下一步怎么调。含决策树和 β 安全速查表。
 
 ---
 
-## 你会得到什么
+## 仓库结构
 
-- **架构指纹**（激活函数、注意力机制、层数）
-- **FPP 四维基线**（GS 结构有序度、MI 信息通道、Phase 层分化度、DC 欺骗指数）
-- **健康评估**（vs 同家族正常范围）
-- **β 安全范围**（动量注入的安全参数区间）
-- **优化建议**（能不能微调、能不能加动量、Phase 峰值导航）
-
-## 实例脚本
-
-```bash
-# 程序化调用 — 在自己的 Python 代码中使用 FPP
-python example.py --model Qwen/Qwen2.5-0.5B-Instruct
-
-# 微调监控演示 — Phase 导航最优 checkpoint 选择（基于 EXP-23 真实数据）
-python demo_finetune_monitor.py
+```
+fpp_health.py              ← 一键体检（主入口）
+fpp_metrics.py             ← 核心 GS/MI/Phase/DC 实现
+tools/                     ← 辅助可视化工具
+  dashboard.py             ← 雷达图 + 柱状图
+  advantage_viz.py         ← FPP vs Loss 优势对比
+examples/                  ← 可运行的示例脚本
+  basic_usage.py           ← 程序化调用 FPP 示例
+  finetune_monitor.py      ← Phase 导航最优 checkpoint（基于 EXP-23 真实数据）
+data/
+  health_reports/          ← 12 个模型健康报告（JSON）
+  experiments/             ← 实验轨迹 + 对比数据
+  DATABASE.md              ← 13 模型评价数据库
+figures/                   ← 4 张论文主图（PDF）
+tables/                    ← 2 个 LaTeX 表格
+docker/                    ← Dockerfile + compose + entrypoint
 ```
 
 ---
@@ -61,80 +63,39 @@ python demo_finetune_monitor.py
 |:---|:---|:---|:---|
 | **GS** | 结构有序度 | 正向/反向计算的时间反演对称性 | 越高 → 结构越健康 |
 | **MI** | 信息通道容量 | 信息从输入到输出保留了多少 | 架构决定上限，微调改不了 |
-| **Phase** | 层功能分化度 | 各层是否在做不同的事 | 峰值 = 最优 checkpoint；下降 = 立即停止训练 |
-| **DC** | 欺骗指数 | Pearson 相关性是否在撒谎 | >0.3 → 不要轻信 GS，优先参考 MI |
+| **Phase** | 层功能分化度 | 各层是否在做不同的事 | 峰值 = 最优 checkpoint |
+| **DC** | 欺骗指数 | Pearson 相关性是否在撒谎 | >0.3 → 优先参考 MI |
 
 ---
 
 ## β 安全速查表
 
-在微调优化器中加入动量之前，先查这张表。同一个 β=0.2，Qwen +19%，Gemma 直接崩。
+在微调优化器中加入动量之前，先查这张表：
 
-| 你的模型属于 | 安全 β 范围 | 预期效果 |
+| 你的模型 | 安全 β 范围 | 预期效果 |
 |:---|:---|:---|
-| Qwen 系列 (SwiGLU+MHA) | [0.05, 0.20] | GS +19% |
+| Qwen (SwiGLU+MHA) | [0.05, 0.20] | GS +19% |
 | OPT (ReLU+MHA) | [0.01, 0.20] | GS +32% |
 | TinyLlama / SmolLM2-360M (SwiGLU+GQA) | [0.01, 0.02] | 仅小 β 可用 |
 | Gemma (GeGLU) | [0.001, 0.02] | 超微量，β>0.02 必崩 |
-| SmolLM2-1.7B (SwiGLU+GQA) | ☠️ **禁止** | 任何 β 都会崩塌 |
+| SmolLM2-1.7B (SwiGLU+GQA) | ☠️ **禁止** | 任何 β 崩塌 |
 | Pythia (GELU+MHA) | [0.01, 0.02] | 保守注入 |
 
 ---
 
-## 仓库内容
+## 实例脚本
 
-```
-fpp_health.py              ← 一键体检（命令行）
-fpp_metrics.py             ← 核心 GS/MI/Phase/DC 实现
-fpp_health_dashboard.py    ← 健康仪表板可视化
-fpp_advantage_viz.py       ← FPP 优势对比可视化
-example.py                 ← 程序化调用示例
-demo_finetune_monitor.py   ← 微调 Phase 监控演示
-data/                      ← 14 个健康报告 + 校准数据库 + 训练轨迹
-figures/                   ← 4 张论文主图（PDF 矢量）
-tables/                    ← 2 个 LaTeX 表格（10 模型、方法对比）
-5MIN_GUIDE.md              ← 五分钟诊断指南
-paper.pdf                  ← 完整论文
+```bash
+# 程序化调用 — 在自己的 Python 代码中使用 FPP
+python examples/basic_usage.py --model Qwen/Qwen2.5-0.5B-Instruct
+
+# 微调监控演示 — Phase 导航最优 checkpoint 选择
+python examples/finetune_monitor.py
 ```
 
 ---
-
-## 论文
-
-**"Loss Is Not Enough: The Golden Window in Neural Network Training"**
-
-- 📄 **论文 PDF**：[HuggingFace](https://huggingface.co/youyouYUE/golden-window)
-- 🔬 **核心发现**：训练不是单调变好的——神经网络经历 Build → Collapse → Rebuild 三个阶段，Loss 看不到中间的结构崩塌
-- 🪟 **黄金窗口**：step ~1,000 时结构质量达到峰值，之后被牺牲以换取边际 Loss 收益
-- 💻 **硬件**：全部实验在消费级硬件上完成。大模型研究不属于大公司。
-
----
-
-## 硬件要求
-
-| 模型规模 | 最低配置 |
-|:---|:---|
-| ≤ 2B 参数 | 4GB 显存 GPU 或 8GB RAM CPU |
-| 7B 参数 | 16GB RAM（CPU 推理） |
-| 14B 参数 | 32GB RAM（CPU 推理） |
 
 ## Docker — 一键复现论文实验
-
-镜像封装了所有能在消费级硬件上跑的实验（无需数周训练）：
-
-| 论文实验 | Docker 命令 | 复现内容 |
-|:---|:---|:---|
-| Table 2（13 模型基线） | `docker run fpp-golden-window health <MODEL>` | GS/MI/Phase/DC + 家族对照 |
-| 模型结构对比 | `docker run fpp-golden-window compare <A> <B>` | 并排结构差异分析 |
-| β 安全校准 | `docker run fpp-golden-window health <MODEL>` | 安全 β 范围（论文数据库） |
-| Phase 导航选点 | `docker run fpp-golden-window monitor` | EXP-23 轨迹 + 三种策略对比 |
-| 完整演示 | `docker run fpp-golden-window demo` | 上述全部一键完成 |
-
-**Docker 无法复现的**（需要实际训练）：
-- Pythia 从头训练 143K 步轨迹（消费级硬件需数周）
-- 动量注入 β 扫描训练（使用论文预计算校准值）
-
-### Docker 常用命令
 
 ```bash
 # 完整演示
@@ -152,28 +113,36 @@ docker run -it fpp-golden-window table
 # GPU 加速
 docker run -it --gpus all fpp-golden-window demo
 
-# 进入交互式 shell
+# 交互式 shell
 docker run -it fpp-golden-window shell
 ```
 
-### 从源码构建
+从源码构建：
 
 ```bash
-docker build -t fpp-golden-window .
-docker run -it fpp-golden-window demo
-
-# GPU 版本（CUDA 11.8）
-docker build --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu118 -t fpp-golden-window:gpu .
+docker build -t fpp-golden-window -f docker/Dockerfile .
+# 或者: cd docker && docker compose up
 ```
 
 ---
 
-## 相关资源
+## 论文
 
-- 🐙 **GitHub**：[github.com/GIS-blackCaat/fpp-golden-window](https://github.com/GIS-blackCaat/fpp-golden-window)
-- 🤗 **HuggingFace Papers**：[huggingface.co/youyouYUE/golden-window](https://huggingface.co/youyouYUE/golden-window)
-- 📱 **公众号系列**：7 篇文章（面向工程师/研究者/开源团队），关注「blackcat」获取
-- 📊 **校准数据库**：14 个模型健康报告，全部开放无限制
+**"Loss Is Not Enough: The Golden Window in Neural Network Training"**
+
+- 📄 **PDF**：[HuggingFace](https://huggingface.co/youyouYUE/golden-window)
+- 🔬 训练不是单调变好的——Build → Collapse → Rebuild 三个阶段，Loss 看不到崩塌
+- 🪟 step ~1,000 时结构质量达到峰值（黄金窗口）
+
+---
+
+## 硬件要求
+
+| 模型规模 | 最低配置 |
+|:---|:---|
+| ≤ 2B 参数 | 4GB 显存 GPU 或 8GB RAM CPU |
+| 7B 参数 | 16GB RAM（CPU 推理） |
+| 14B 参数 | 32GB RAM（CPU 推理） |
 
 ---
 
