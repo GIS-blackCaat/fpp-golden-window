@@ -33,6 +33,16 @@ python fpp_health.py --model Qwen/Qwen2.5-0.5B-Instruct
 - **β 安全范围**（动量注入的安全参数区间）
 - **优化建议**（能不能微调、能不能加动量、Phase 峰值导航）
 
+## 实例脚本
+
+```bash
+# 程序化调用 — 在自己的代码中使用 FPP
+python example.py --model Qwen/Qwen2.5-0.5B-Instruct
+
+# 微调监控演示 — Phase 导航最优 checkpoint 选择
+python demo_finetune_monitor.py
+```
+
 ---
 
 ## 四维指标

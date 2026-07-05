@@ -1,0 +1,25 @@
+
+\begin{table}[t]
+\centering
+\caption{FPP vs.\ existing model analysis methods. FPP is the only method 
+providing real-time, system-level structural diagnostics without training,
+and the only method enabling guided optimization decisions.}
+\label{tab:method_comparison}
+\begin{tabular}{lcccccc}
+\toprule
+Method & No Training & Real-Time & System-Level & Multi-Dim & Guides Opt. & Arch-Aware \\
+\midrule
+Probing~\cite{alain2016understanding} 
+  & \checkmark & \checkmark & -- & -- & -- & -- \\
+SAE~\cite{cunningham2023sparse,bricken2023monosemanticity} 
+  & -- & -- & -- & \checkmark & -- & -- \\
+Attention Viz~\cite{clark2019does} 
+  & \checkmark & -- & -- & -- & -- & -- \\
+Loss-only 
+  & \checkmark & \checkmark & -- & -- & \checkmark & \checkmark \\
+\midrule
+\textbf{FPP (this work)} 
+  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}

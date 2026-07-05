@@ -1,0 +1,22 @@
+{
+  "model": "google/gemma-3-1b",
+  "architecture": {"layers": 24, "activation": "geglu", "family": "GeGLU", "attention": "MHA"},
+  "fpp_baseline": {
+    "gs": 0.282, "gs_std": 0.004,
+    "mi": 0.096, "mi_std": 0.002,
+    "ph": 0.311, "ph_std": 0.005,
+    "dc": 0.087, "ipr": 0.852
+  },
+  "health": {"status": "🟡 NEEDS ATTENTION", "checks": {"gs": "⚠️ LOW", "mi": "✅", "phase": "✅"}},
+  "beta_safe": [0.001, 0.02],
+  "recommendations": [
+    "GS significantly below SwiGLU family norm (0.28 vs 0.75-0.92). GeGLU family has wide GS range.",
+    "β extremely narrow: [0.001, 0.02]. Any β>0.02 causes structural collapse in GeGLU models.",
+    "MI acceptable for inference tasks. Phase within family norm.",
+    "Not recommended as base model for fine-tuning. Use Qwen or OPT for better structure."
+  ],
+  "n_runs": 10,
+  "precision": "FP32 GPU",
+  "hardware": "GTX 1650 Ti 4GB",
+  "date": "2026-07-03"
+}

@@ -21,6 +21,16 @@ New to FPP? Start here: **[5MIN_GUIDE.md](5MIN_GUIDE.md)** — load model → ru
 - Safe β range for momentum injection
 - Optimization recommendations
 
+## Examples
+
+```bash
+# Programmatic usage — call FPP from your own code
+python example.py --model Qwen/Qwen2.5-0.5B-Instruct
+
+# Fine-tuning monitor — Phase-guided checkpoint selection demo
+python demo_finetune_monitor.py
+```
+
 ## Paper
 
 "Loss Is Not Enough: The Golden Window in Neural Network Training"

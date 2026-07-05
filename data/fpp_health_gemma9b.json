@@ -1,0 +1,31 @@
+{
+  "model": "google/gemma-2-9b",
+  "architecture": {"layers": 42, "activation": "geglu", "family": "GeGLU", "attention": "GQA"},
+  "fpp_baseline": {
+    "gs": 0.910, "gs_std": 0.000,
+    "mi": 0.048, "mi_std": 0.000,
+    "ph": 0.055, "ph_std": 0.000,
+    "dc": 0.690
+  },
+  "health": {"status": "🟡 NEEDS ATTENTION", "checks": {"gs": "✅", "mi": "✅", "phase": "⚠️ LOW"}},
+  "beta_safe": [0.01, 0.05],
+  "beta_sweep": {
+    "0.01": {"gs": 0.900, "drop_pct": 1.0},
+    "0.02": {"gs": 0.891, "drop_pct": 2.0},
+    "0.05": {"gs": 0.846, "drop_pct": 7.0},
+    "0.10": {"gs": 0.600, "drop_pct": 34.1},
+    "0.20": {"gs": 0.659, "drop_pct": 27.5},
+    "0.50": {"gs": 0.818, "drop_pct": 10.1}
+  },
+  "recommendations": [
+    "Highest GS of all models (0.91) but very low Phase (0.06) — layers are highly homogeneous.",
+    "DC extremely high (0.69): Pearson-based metrics unreliable. Trust MI only.",
+    "β safety narrow: [0.01, 0.05]. β=0.1 causes 34% GS drop.",
+    "Best GS in the database but Phase too low for Phase-guided checkpoint navigation.",
+    "MI very low (0.05) — not recommended for tasks requiring deep information retention."
+  ],
+  "n_runs": 10,
+  "precision": "FP16 CPU",
+  "hardware": "Intel Core Ultra X7 30GB",
+  "date": "2026-07-05"
+}

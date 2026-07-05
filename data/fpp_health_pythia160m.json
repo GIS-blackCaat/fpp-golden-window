@@ -1,0 +1,22 @@
+{
+  "model": "EleutherAI/pythia-160m",
+  "architecture": {"layers": 12, "activation": "gelu", "family": "GELU", "attention": "MHA"},
+  "fpp_baseline": {
+    "gs": 0.457, "gs_std": 0.008,
+    "mi": 0.197, "mi_std": 0.005,
+    "ph": 0.350, "ph_std": 0.006,
+    "dc": 0.120, "ipr": 0.623
+  },
+  "health": {"status": "🟢 HEALTHY", "checks": {"gs": "✅", "mi": "✅", "phase": "✅"}},
+  "beta_safe": [0.01, 0.02],
+  "recommendations": [
+    "All metrics within GELU family norms. Model structure is healthy.",
+    "β range conservative: [0.01, 0.02]. Small model, small β.",
+    "Pythia provides 154 intermediate checkpoints — ideal for studying three-phase lifecycle.",
+    "GS(0.46) and MI(0.20) both moderate — sufficient for small-scale tasks."
+  ],
+  "n_runs": 10,
+  "precision": "FP32 GPU",
+  "hardware": "GTX 1650 Ti 4GB",
+  "date": "2026-07-03"
+}

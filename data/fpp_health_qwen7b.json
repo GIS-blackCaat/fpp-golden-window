@@ -1,0 +1,30 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "architecture": {"layers": 28, "activation": "silu", "family": "SwiGLU", "attention": "MHA"},
+  "fpp_baseline": {
+    "gs": 0.811, "gs_std": 0.000,
+    "mi": 0.058, "mi_std": 0.000,
+    "ph": 0.403, "ph_std": 0.000,
+    "dc": 0.063
+  },
+  "health": {"status": "🟢 HEALTHY", "checks": {"gs": "✅", "mi": "✅", "phase": "✅"}},
+  "beta_safe": [0.01, 0.50],
+  "beta_sweep": {
+    "0.01": {"gs": 0.798, "drop_pct": 1.6},
+    "0.02": {"gs": 0.790, "drop_pct": 2.6},
+    "0.05": {"gs": 0.803, "drop_pct": 0.9},
+    "0.10": {"gs": 0.737, "drop_pct": 9.0},
+    "0.20": {"gs": 0.804, "drop_pct": 0.8},
+    "0.50": {"gs": 0.834, "drop_pct": -2.9}
+  },
+  "recommendations": [
+    "Widest β range of all models: [0.01, 0.50] full safe.",
+    "Qwen 7B shows a GS U-curve trough (0.81, lower than 1.5B's 0.89).",
+    "Phase stable at 0.40 — excellent for Phase-guided checkpointing.",
+    "MI(0.06) is on the lower end — consider for tasks requiring long-range information."
+  ],
+  "n_runs": 10,
+  "precision": "FP16 CPU",
+  "hardware": "Intel Core Ultra X7 30GB",
+  "date": "2026-07-05"
+}
